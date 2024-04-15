@@ -5,12 +5,16 @@ class Donnees:
 
     def __init__(self):
         self.titres = {"titres":set()} 
-        self.casts = {"casts":set()}
+        self.casts = {"casts":[]}
         self.directeurs = {'directeurs':set()}
         self.producteurs = {'producteurs':set()}
         self.companies = {'companies':set()}
         self.annees = {'annees':set()}
-        self.collabActeurs = {} #clé nom d'acteur, valeur leur collaboration effectué 
+
+        # Attributs pour les requêtes
+        self.collaborateurs = {} #clé nom d'acteur, valeur leur collaboration effectué 
+
+        # Graphe
         #self.G = nx.Graph()
 
     def draw_graph(self):
@@ -18,11 +22,11 @@ class Donnees:
         #nx.draw(self.G)
     
     def ajout_donnees(self):
-        f = open('data.json', 'r')
+        f = open('data_court.txt', 'r')
         for ligne in f:
             dict_ligne=json.loads(ligne)
             self.titres['titres'].add(dict_ligne['title'])
-            self.casts['casts'].update(dict_ligne['cast'])
+            self.casts['casts'].append(list(dict_ligne['cast']))
             if('directors' in dict_ligne):
                 self.directeurs['directeurs'].update(dict_ligne['directors'])
             if('producers' in dict_ligne):
@@ -32,6 +36,7 @@ class Donnees:
             if('year' in dict_ligne):
                 self.annees['annees'].add(dict_ligne['year'])
         f.close()
+        print(self.casts)
 
     
 test = Donnees()
