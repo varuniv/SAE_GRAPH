@@ -1,3 +1,4 @@
+from tkinter.tix import TEXT
 import networkx as nx
 import matplotlib.pyplot as plt
 import json
@@ -23,12 +24,15 @@ class Donnees:
         plt.show()
         
     def split_name(self,txt):
-        if "[" in txt :
-            txt = txt.split("[")
-            txt = max(txt)
-        if "]" in txt :
-            txt = txt.split("]")
-            txt = max(txt)
+        txt = txt.replace('[', '').replace(']', '').replace("'", '')
+        i = len(txt)
+        if "(" in txt:
+            i = min(i, txt.index("("))
+        if "<" in txt:
+            i = min(i, txt.index("<"))
+        if "|" in txt:
+            i = min(i, txt.index("|"))
+        txt = txt[:i]
         return txt
     
     def ajout_donnees(self):
@@ -48,7 +52,7 @@ class Donnees:
         f.close()
 
     def json_vers_nx(self):
-            f = open('data_court.txt', 'r')
+            f = open('data_100.txt', 'r')
             for ligne in f:
                 dict_ligne = json.loads(ligne)
                 acteurs=dict_ligne['cast']
@@ -133,5 +137,9 @@ class Donnees:
 test = Donnees()
 test.ajout_donnees()
 test.json_vers_nx()
-print(test.split_name("[[Rosa Maria Sardà]]"))
-print(test.distance("[[Rosa Maria Sardà]]","Bruce Campbell"))
+#print(list(test.G.nodes()))
+#print(test.split_name("[[Rosa Maria Sardà]]"))
+#print(test.distance("Rosa Maria Sardà","Bruce Campbell"))
+
+
+
