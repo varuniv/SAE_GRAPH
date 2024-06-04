@@ -137,9 +137,9 @@ class Donnees:
 test = Donnees()
 test.ajout_donnees()
 test.json_vers_nx()
-#print(list(test.G.nodes()))
-#print(test.split_name("[[Rosa Maria Sardà]]"))
-#print(test.distance("Rosa Maria Sardà","Bruce Campbell"))
+print(list(test.G.nodes()))
+print(test.split_name("[[Rosa Maria Sardà]]"))
+print(test.distance("Rosa Maria Sardà","Bruce Campbell"))
 
 
 
