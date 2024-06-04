@@ -52,22 +52,24 @@ class Donnees:
         f.close()
 
     def json_vers_nx(self):
-            f = open('data_100.txt', 'r')
+            f = open('data_court.txt', 'r')
             for ligne in f:
                 dict_ligne = json.loads(ligne)
                 acteurs=dict_ligne['cast']
+                tmp = set()
                 for acteur in acteurs:
                     acteur1 = self.split_name(acteur)
                     if not self.G.has_node(acteur1):
                         self.G.add_node(acteur1)
-                    acteurs.remove(acteur)
-                    for act in acteur:
-                        self.G.add_edge(acteur1,self.split_name(act))
+                        tmp.add(acteur1) 
+                    for act in tmp:
+                        if act != acteur1:
+                            self.G.add_edge(acteur1,self.split_name(act))
                 
             
 
 
-    def collaborateurs_communs(self, acteur1, acteur2):
+    def collaborateurs_communs1(self, acteur1, acteur2):
         """Fonction renvoyant l'ensemble des collaborations de 2 acteurs précisés en paramètre
 
         Args:
@@ -86,7 +88,30 @@ class Donnees:
                         self.collaborateurs[(acteur1, acteur2)].update(cast)
             self.collaborateurs[(acteur1, acteur2)]-=acteurs
         return self.collaborateurs
-        
+    
+
+    def collaborateurs_communs(self, acteur1, acteur2):
+        """Fonction renvoyant l'ensemble des collaborations de 2 acteurs précisés en paramètre
+
+        Args:
+            acteur1 (str): le premier acteur
+            acteur2 (str): le deuxième acteur
+
+        Returns:
+            set: l'ensemble des collaborations
+        """
+        collab = set() 
+        if acteur1  in self.G.nodes() and acteur2 in self.G.nodes():
+            c1 = self.G.adj[acteur1] 
+            c2 =  self.G.adj[acteur2]
+            for act in c1:
+                for act2 in c2:
+                    if act == act2:
+                        collab.add(act) 
+        return collab
+            
+
+
 
     def collaborateurs_proches(self,u,k):
         """Fonction renvoyant l'ensemble des acteurs à distance au plus k de l'acteur u dans le graphe G. La fonction renvoie None si u est absent du graphe.
@@ -122,7 +147,6 @@ class Donnees:
             return None
         collabo = set()
         collabo.add(u)
-        print(collabo) 
         for i in range(self.G.number_of_nodes()):
             collaborateurs_directs = set()
             for c in collabo:
@@ -134,12 +158,15 @@ class Donnees:
                 return i
         return i
     
+    def centralité(self,acteur): #?
+        return nx.shortest_path_length(self.G,acteur)
+    
 test = Donnees()
 test.ajout_donnees()
 test.json_vers_nx()
-print(list(test.G.nodes()))
-print(test.split_name("[[Rosa Maria Sardà]]"))
-print(test.distance("Rosa Maria Sardà","Bruce Campbell"))
+print(len(list(test.G.nodes())))
+print(test.distance("Núria Espert","Bruce Campbell"))
+print(test.collaborateurs_communs("Núria Espert","Mercè Pons"))
 
 
 
