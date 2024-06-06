@@ -35,8 +35,8 @@ class Donnees:
         txt = txt[:i]
         return txt
     
-    def ajout_donnees(self):
-        f = open('data_100.txt', 'r')
+    def ajout_donnees(self,data):
+        f = open(data, 'r')
         for ligne in f:
             dict_ligne=json.loads(ligne)
             self.titres['titres'].add(dict_ligne['title'])
@@ -51,20 +51,17 @@ class Donnees:
                 self.annees['annees'].add(dict_ligne['year'])
         f.close()
 
-    def json_vers_nx(self):
-            f = open('data_court.txt', 'r')
+    def json_vers_nx(self,data):
+            f = open(data, 'r')
             for ligne in f:
                 dict_ligne = json.loads(ligne)
                 acteurs=dict_ligne['cast']
                 tmp = set()
                 for acteur in acteurs:
                     acteur1 = self.split_name(acteur)
-                    if not self.G.has_node(acteur1):
-                        self.G.add_node(acteur1)
-                        tmp.add(acteur1) 
-                    for act in tmp:
-                        if act != acteur1:
-                            self.G.add_edge(acteur1,self.split_name(act))
+                    for acteur2 in acteur:
+                        acteur2 = self.split_name(acteur2)
+                        self.G.add_edge(acteur1,acteur2)
                 
             
 
@@ -158,15 +155,22 @@ class Donnees:
                 return i
         return i
     
-    def centralité(self,acteur): #?
-        return nx.shortest_path_length(self.G,acteur)
+    def Centralié(self,acteur): #?
+        if acteur not in self.G.nodes:
+            print(acteur,"est un illustre inconnu")
+            return None
+        distance = nx.shortest_path_length(self.G,source=acteur)
+        return max(distance.values())
     
 test = Donnees()
-test.ajout_donnees()
-test.json_vers_nx()
-print(len(list(test.G.nodes())))
-print(test.distance("Núria Espert","Bruce Campbell"))
-print(test.collaborateurs_communs("Núria Espert","Mercè Pons"))
+data = 'data.txt'
+#test.ajout_donnees(data)
+test.json_vers_nx(data)
+#print(len(list(test.G.nodes())))
+print(test.Centralié("Allakariallak"))
+#print(test.distance("Allakariallak","Harrion Ford"))
+#print(test.collaborateurs_communs("Núria Espert","Mercè Pons"))
+#print(test.Centralié("Harrison Ford"))
 
 
 
