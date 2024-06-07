@@ -51,6 +51,11 @@ def json_vers_nx(chemin):
                             G.add_edge(acteur1,act)
         return G
 
+def dessiner_graphe(G):
+    plt.cla()
+    nx.draw(G)
+    plt.show()
+
 
 def collaborateurs_communs(G, u, v):
     """Fonction renvoyant l'ensemble des collaborations de 2 acteurs précisés en paramètre
