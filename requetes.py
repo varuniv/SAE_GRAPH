@@ -4,13 +4,13 @@ import matplotlib.pyplot as plt
 import json
     
 def split_name(txt):
-    """traite le text donné 
+    """traite le texte donné 
 
     Args:
-        txt (str): text issue de de file 
+        txt (str): texte issue de file 
 
     Returns:
-        str: le text traité
+        str: le texte traité
     """    
     txt = txt.replace('[', '').replace(']', '').replace("'", '')
     i = len(txt)
@@ -25,18 +25,18 @@ def split_name(txt):
 
 
 
-def json_vers_nx(chemain):
-        """transforme les donnes des acteur et leur collaborations en graph avec les acateur en forme de noeud et 
-        les collaboration comme une arrete avec un autre acteur    
+def json_vers_nx(chemin):
+        """transforme les données des acteurs et leurs collaborations en graphe avec les acateurs en forme de noeud et 
+        les collaborations comme une arrete avec un autre acteur    
 
         Args:
-            chemain (str): chemain vers le fichier
+            chemin (str): chemin vers le fichier
 
         Returns:
-            Graph: graph des acteur
+            Graph: graphe des acteurs
         """          
         G = nx.Graph()
-        f = open(chemain, 'r')
+        f = open(chemin, 'r')
         for ligne in f:
             dict_ligne = json.loads(ligne)
             acteurs=dict_ligne['cast']
@@ -98,26 +98,29 @@ def collaborateurs_proches(G,u,k):
     return collabo
 
 def est_proche(G,u,v,k=1):
-    """renvoi est ce que v est proche de u pour une distance donner, la distance de defuat est 1
+    """renvoie True si v est proche de u pour une distance donné, sinon False. La distance par défaut est 1.
 
     Args:
-        G (graph): graph des acteur
+        G (graph): graphe des acteurs
         u (str): acteur
         v (str): acteur
-        k (int, optional): la distance. Defaults to 1.
+        k (int, optional): la distance. Par défaut égal à 1
 
     Returns:
-        bool: 
+        bool: True si v est proche de u sur la distance donné, sinon False
     """   
     return v in collaborateurs_proches(G,u,k)
 
 def distance_naive(G,u,v):
-    """Fonction donnant la distance entre 2 acteurs, renvoi None si la disnace entre les 2 acteur est introuvable
+    """Fonction donnant la distance entre 2 acteurs, renvoie None si la distance entre les 2 acteurs est introuvable
 
     Args:
-        G : graph 
+        G : graphe 
         u (str): un premier acteur
         v (str): un deuxième acteur
+    
+    Returns:
+        int: distance entre les 2 acteurs.  None si la distance est introuvable
     """   
     d = 1
     m = G.number_of_nodes()
@@ -136,13 +139,16 @@ def distance_naive(G,u,v):
 
 
 def distance(G,u,v):
-    """Fonction donnant la distance entre 2 acteurs, renvoi None si la disnace entre les 2 acteur est introuvable
+    """Fonction donnant la distance entre 2 acteurs, renvoie None si la distance entre les 2 acteurs est introuvable
 
     Args:
-        G : graph 
+        G : graphe
         u (str): un premier acteur
         v (str): un deuxième acteur
-    """        
+        
+    Returns:
+        int: distance entre les 2 acteurs.  None si la distance est introuvable
+    """       
     if u not in G.nodes:
         print(u,"est un illustre inconnu")
         return None
@@ -169,14 +175,14 @@ def distance(G,u,v):
         return None
 
 def centralite(G,u): 
-    """renvoi la centralié d'un acteur
+    """renvoie la centralité d'un acteur
 
     Args:
-        G (graph): graph des acteur
+        G (graph): graphe des acteurs
         u (str): nom d'acteur
 
     Returns:
-        int: cnetralité d'acteur
+        int: centralité de l'acteur
     """    
     if u not in G.nodes:
         print(u,"est un illustre inconnu")
@@ -185,13 +191,13 @@ def centralite(G,u):
     return max(distance.values())
 
 def centre_hollywood(G):
-    """renvoi la centre de graph donné
+    """renvoie la centralité du graphe
 
     Args:
-        G (graph): graph
+        G (graph): graphe
 
     Returns:
-        str: acteur qui est au cntre
+        str: l'acteur au centre du graphe
     """    
     listG = list(G.nodes)
     min = None
@@ -204,13 +210,13 @@ def centre_hollywood(G):
     return acteur     
 
 def eloignement_max(G:nx.Graph):
-    """renvoi eloignement max de graph donné
+    """renvoie l'éloignement maximum du graphe donné
 
     Args:
-        G (graph): graph
+        G (graph): graphe
 
     Returns:
-        int: 
+        int: l'éloignement maximum
     """    
     listG = list(G.nodes)
     max = None
@@ -220,16 +226,4 @@ def eloignement_max(G:nx.Graph):
         if max == None or max < tmp:
             max = tmp
             acteur = listG[i]
-    return max     
- 
-
-
-
-
-
-
-
-
-
-
-
+    return max 
